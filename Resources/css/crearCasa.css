@@ -1,0 +1,33 @@
+.pos{
+    background-color: #1161ee;
+    height: 35px;
+    width: 100%;
+    border-radius: 5px;
+    color:#fff;
+    border: 2px #265a88 solid;
+}
+.labelL{
+    font-size: 20px;
+}
+#spn{
+    background-color: #3F80DE;
+    color:#fff;
+}
+#spnImg{
+
+    background-color: #3F80DE;
+    color:#fff;
+
+}
+.fileUp{
+    background-color: #245580;
+    padding: 2px;
+    border-radius: 4px; 
+    color: #fff;
+    height: 60px;
+}
+.lblp{
+    margin-left: 15px;
+    font-family: "Harlow Solid Italic";
+    font-size: 15px;
+}

@@ -1,0 +1,71 @@
+.scrolTitulo{
+    padding: auto;
+    margin: 10px 5%;
+    font-size: 30px;
+    color: #fff;
+    border-radius: 15px;
+    background: linear-gradient(to bottom, #1A95CC 67%, #0099cc 100%);
+}
+.formDiv{
+    background: #eee;
+    padding: auto;
+    margin: 0px 5%;
+    border-color: #000;
+    border-style: solid;
+    border-radius: 15px;
+    width: 100%;
+    height: auto;
+
+}
+.cajaspam{
+    background: #0099cc;
+    width: 30px;
+    border-radius: 5px 0px 0px 5px;
+    text-align: center;
+    color:#fff;
+    padding-top: 10px; 
+}
+.inputCaja{
+    border-style: 1px;
+}
+.botton{
+    margin-left: 40%;
+    width: 30%; 
+}
+#divPersonal{
+    display: none;
+}
+.divdisplay1{
+
+}
+#spn{
+    background-color: #3F80DE;
+    color:#fff;
+}
+.lapis{
+    border-radius: 8px;
+    background-image:url(../..//resources/img/lapiz.png);
+
+    background-repeat:no-repeat;
+    height:20px;
+    width:60px;
+    background-position:center;
+}
+.basura{
+    border-radius: 8px;
+    background-image:url(../..//resources/img/basura.png);
+
+    background-repeat:no-repeat;
+    height:20px;
+    width:60px;
+    background-position:center;
+}
+.detalles{
+    border-radius: 8px;
+    background-image:url(../..//resources/img/lupa_1.png);
+
+    background-repeat:no-repeat;
+    height:20px;
+    width:60px;
+    background-position:center;
+}

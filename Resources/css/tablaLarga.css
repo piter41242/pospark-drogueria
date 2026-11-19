@@ -1,0 +1,44 @@
+label{
+	padding: 1px;
+	background-color: #1061BD ; 
+	color: #FFFFFF;
+	padding: 10px;
+	font-size:20px;
+	width: 100%;
+}
+table{
+	padding: 1px;
+	border-collapse: collapse;
+	width: 100%;
+}
+td, th{
+	padding: 5px 10px;
+}
+@media(max-width: 65em){
+	table{
+		border-radius:10px;
+		width: 100%;
+	}
+	table tr{
+		display: flex;
+		flex-direction:column;
+		border:1px solid grey;
+		padding: 1em;
+		margin-bottom: 1em;
+	}
+	table td,table th{
+		border: none;
+	}
+	table td[data-titulo]{
+		display: flex;
+	}
+	table td[data-titulo]::before{
+		content: attr(data-titulo);
+		width: 90px;
+		font-weight: bold;
+		color: silver;
+	}
+	table thead{
+		display: none;
+	}
+}

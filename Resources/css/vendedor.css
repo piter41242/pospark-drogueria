@@ -1,0 +1,58 @@
+.colorFondo{
+
+}
+#form1{
+	padding: 0;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+#frm1 div div{
+	padding: 0;
+	margin-top: 0;
+	width: 33%;
+}
+#frm1 div div select{
+	font-size: 20px;
+	background: #2970AF;
+	color: #fff;
+}
+#frm1 div div input{
+	font-size: 20px;
+}
+#btn1{
+	margin-top: 5px;
+	font-size: 20px;
+	float: right;
+	width: 100%;
+}
+#btn2{
+	margin-top: 5px;
+	font-size: 20px;
+	float: right;
+	width: 100%;
+}
+.lab{
+	float: right;
+}
+#btn3{
+	margin-top: 5px;
+	font-size: 20px;
+	float: right;
+	width: 100%;
+}
+#table1{
+	width: 100%;
+	background-position: #252;
+}
+
+#listar-productos div input{
+	width: 20%;
+	float: right;
+}
+#listar-productos div label{
+	width: 20%;
+	float: right;
+}
+.swal-wide{
+       width:850px !important;
+}

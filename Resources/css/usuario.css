@@ -1,0 +1,57 @@
+body {
+  background: #2c3e50;
+  color: white;
+  font-family: monospace;
+}
+input, .modal {
+  color: black;
+}
+.table-striped > tbody > tr:nth-child(2n + 1) > td,
+.table-striped > tbody > tr:nth-child(2n + 1) > th {
+  background-color: #34495e;
+  color: #fff;
+  border-radius: 4px;
+}
+.row .alert {
+  margin-top: 25px;
+}
+th, td {
+  border-top: none !important;
+}
+.labelL{
+  color :#f83;
+}
+h3 {
+  background-color: #333;
+  padding: 12px;
+  color: #fff;
+  border-radius: 20px 20px 0px 0px;
+  font-weight: bolder;
+  letter-spacing: .1em;
+}
+select {
+  background-color: #1331AD;
+}
+.modal-content{
+  border-radius: 0;
+}
+
+.modal-header, .modal-footer {
+  background-color: #333;
+  color: white;
+  border: 0;
+}
+
+.modal-body {
+  background: #2c3e50;
+  color: white;
+}
+
+.close, .close:hover {
+  color: white;
+}
+
+.btn {
+  font-weight: bolder;
+  letter-spacing: .2em;
+}

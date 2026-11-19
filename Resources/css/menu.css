@@ -1,0 +1,173 @@
+:root {
+    --sidebar-width: 260px;
+    --primary-green: #198754;
+    --menu-bg: #0f172a;
+    /* Azul marino profundo */
+    --menu-text: #b3c3da;
+    --bg-body: #96c7f8;
+    /* Gris muy claro, descansa la vista */
+}
+
+body {
+    background-color: var(--bg-body) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    margin: 0 !important;
+    color: #334155 !important;
+}
+
+/* MENÚ LATERAL OSCURO (Descansa la vista) */
+.sidebar {
+    width: var(--sidebar-width) !important;
+    height: 100vh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    background-color: var(--menu-bg) !important;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1) !important;
+    z-index: 1000 !important;
+    overflow-y: auto !important;
+}
+
+.sidebar .logo {
+    padding: 30px 20px !important;
+    text-align: center !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.sidebar .logo h4 {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    font-size: 1.4rem !important;
+}
+
+.sidebar .logo small {
+    color: #64748b !important;
+}
+
+.sidebar ul {
+    list-style: none !important;
+    padding: 20px 15px !important;
+    margin: 0 !important;
+}
+
+
+.sidebar ul li a {
+    display: flex !important;
+    align-items: center !important;
+    padding: 14px 18px !important;
+    color: #cbd5e1 !important;
+    /* Color gris claro para el menú */
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    margin-bottom: 8px !important;
+    transition: all 0.3s !important;
+    font-size: 1rem;
+}
+
+/* Esto controla el tamaño de los iconos */
+.sidebar ul li a i {
+    font-size: 1.3rem !important;
+    margin-right: 15px !important;
+    color: #94a3b8 !important;
+    transition: color 0.3s !important;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background-color: var(--primary-green) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.4) !important;
+}
+
+/* Cuando pasas el mouse o está activo, el icono se pone blanco */
+.sidebar ul li a:hover i,
+.sidebar ul li a.active i {
+    color: #ffffff !important;
+}
+
+/* CONTENIDO PRINCIPAL CLARO */
+.main-content {
+    margin-left: var(--sidebar-width) !important;
+    padding: 40px 50px !important;
+    /* Más espacio alrededor */
+    min-height: 100vh !important;
+}
+
+/* TOPBAR BLANCA */
+.topbar {
+    background: #0f172a !important;
+    padding: 20px 30px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 30px !important;
+}
+
+/* Tarjetas de alerta en el dashboard */
+.alert-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+    overflow: hidden !important;
+}
+
+/* RESPONSIVE (Móviles y Tablets) */
+@media (max-width: 800px) {
+    .sidebar .logo img {
+        max-width: 120px !important; /* Un poco más pequeña en móvil */
+    }
+    /* Escondemos el menú fuera de la pantalla */
+    .sidebar {
+        left: -100% !important;
+        transition: left 0.3s ease !important;
+    }
+
+    /* Cuando se activa, entra a la pantalla */
+    .sidebar.show {
+        left: 0 !important;
+    }
+
+    /* El contenido ocupa todo el ancho */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 20px !important;
+    }
+
+    /* Mostramos el botón hamburguesa en la barra superior */
+    .btn-menu-toggle {
+        display: block !important;
+        color: #ffffff !important;
+        font-size: 1.8rem !important;
+        background: transparent !important;
+        border: none !important;
+        margin-right: 15px !important;
+    }
+
+    /* El fondo oscuro semitransparente cuando el menú está abierto */
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .overlay.show {
+        display: block !important;
+    }
+}
+
+.btn-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
