@@ -1,7 +1,7 @@
 <?php
 class Carrito {
     
-    // 1. Abrir un carrito nuevo para un cliente
+    // 1. Abrir un carrito nuevo
     public function abrir($idSede, $idCliente, $idUsuario) {
         $conexionBD = BD::crearInstancia();
         $sql = $conexionBD->prepare("INSERT INTO carrito (idSede, idCliente, usuario_apertura, estado) VALUES (?, ?, ?, 'ABIERTO')");
@@ -9,7 +9,7 @@ class Carrito {
         return $conexionBD->lastInsertId();
     }
 
-    // 2. Buscar el carrito abierto de un usuario
+    // 2. Buscar el carrito abierto del usuario
     public function buscarCarritoAbierto($idUsuario, $idSede) {
         $conexionBD = BD::crearInstancia();
         $sql = $conexionBD->prepare("SELECT * FROM carrito WHERE usuario_apertura = ? AND idSede = ? AND estado = 'ABIERTO' ORDER BY fecha_apertura DESC LIMIT 1");
@@ -17,33 +17,63 @@ class Carrito {
         return $sql->fetch();
     }
 
-    // 3. Agregar producto al carrito
-    public function agregarProducto($idCarrito, $idProducto, $cantidad, $valor, $idUsuario) {
+    // 3. Agregar producto al carrito (Buscando el lote FIFO)
+    public function agregarProducto($idCarrito, $idProducto, $cantidad, $idUsuario) {
         $conexionBD = BD::crearInstancia();
         
-        // Verificar si el producto ya está en el carrito
+        // Primero verificamos si hay stock suficiente en la vista v_stock
+        $sqlStock = $conexionBD->prepare("SELECT stock_disponible FROM v_stock WHERE idProducto = ? AND idSede = (SELECT idSede FROM carrito WHERE idCarrito = ?)");
+        $sqlStock->execute([$idProducto, $idCarrito]);
+        $stock = $sqlStock->fetch();
+        
+        if (!$stock || $stock['stock_disponible'] < $cantidad) {
+            return false; // No hay stock suficiente
+        }
+
+        // Buscamos si el producto ya está en el carrito
         $sql = $conexionBD->prepare("SELECT * FROM detallecarrito WHERE idCarrito = ? AND idProducto = ?");
         $sql->execute(array($idCarrito, $idProducto));
         $existe = $sql->fetch();
 
         if ($existe) {
-            // Si ya existe, sumamos la cantidad
             $nuevaCantidad = $existe['cantidad'] + $cantidad;
-            $nuevoSubtotal = $nuevaCantidad * $valor;
-            $sql = $conexionBD->prepare("UPDATE detallecarrito SET cantidad = ?, subtotal = ? WHERE idDetalle = ?");
-            $sql->execute(array($nuevaCantidad, $nuevoSubtotal, $existe['idDetalle']));
+            $sql = $conexionBD->prepare("UPDATE detallecarrito SET cantidad = ?, subtotal = cantidad * valor WHERE idDetalle = ?");
+            $sql->execute(array($nuevaCantidad, $existe['idDetalle']));
         } else {
-            // Si no existe, lo insertamos
-            $subtotal = $cantidad * $valor;
-            $sql = $conexionBD->prepare("INSERT INTO detallecarrito (idCarrito, idProducto, cantidad, valor, subtotal, agregado_por) VALUES (?, ?, ?, ?, ?, ?)");
-            $sql->execute(array($idCarrito, $idProducto, $cantidad, $valor, $subtotal, $idUsuario));
+            // Si es nuevo, buscamos el LOTE MÁS PRÓXIMO A VENCER (FIFO) con stock disponible
+            $sqlLote = $conexionBD->prepare("
+                SELECT idLote, cantidad_actual, cantidad_reservada, valorVenta 
+                FROM lote l
+                JOIN producto p ON p.idProducto = l.idProducto
+                WHERE l.idProducto = ? AND l.idSede = (SELECT idSede FROM carrito WHERE idCarrito = ?) 
+                  AND l.estado = 1 AND (l.cantidad_actual - l.cantidad_reservada) >= ?
+                ORDER BY l.fecha_vencimiento ASC LIMIT 1
+            ");
+            $sqlLote->execute([$idProducto, $idCarrito, $cantidad]);
+            $lote = $sqlLote->fetch();
+            
+            if ($lote) {
+                // Insertamos en el detalle con el ID del lote encontrado
+                $subtotal = $cantidad * $lote['valorVenta'];
+                $sql = $conexionBD->prepare("
+                    INSERT INTO detallecarrito (idCarrito, idProducto, idLote, cantidad, valor, subtotal, agregado_por) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ");
+                $sql->execute([$idCarrito, $idProducto, $lote['idLote'], $cantidad, $lote['valorVenta'], $subtotal, $idUsuario]);
+                
+                // RESERVAMOS EL STOCK en el lote para que nadie más lo tome
+                $sqlReserva = $conexionBD->prepare("UPDATE lote SET cantidad_reservada = cantidad_reservada + ? WHERE idLote = ?");
+                $sqlReserva->execute([$cantidad, $lote['idLote']]);
+            } else {
+                return false; // No hay ningún lote con stock suficiente
+            }
         }
         
         $this->actualizarTotales($idCarrito);
         return true;
     }
 
-    // 4. Actualizar los totales de la cabecera del carrito
+    // 4. Actualizar los totales
     public function actualizarTotales($idCarrito) {
         $conexionBD = BD::crearInstancia();
         $sql = $conexionBD->prepare("SELECT SUM(subtotal) as total FROM detallecarrito WHERE idCarrito = ?");
@@ -59,18 +89,31 @@ class Carrito {
     public function obtenerProductos($idCarrito) {
         $conexionBD = BD::crearInstancia();
         $sql = $conexionBD->prepare("
-            SELECT dc.*, p.nombre, p.codigo_interno 
+            SELECT dc.*, p.nombre, p.codigo_interno, l.codigo_lote 
             FROM detallecarrito dc
             INNER JOIN producto p ON p.idProducto = dc.idProducto
+            INNER JOIN lote l ON l.idLote = dc.idLote
             WHERE dc.idCarrito = ?
         ");
         $sql->execute(array($idCarrito));
         return $sql->fetchAll();
     }
 
-    // 6. Eliminar un producto del carrito
+    // 6. Eliminar un producto del carrito y liberar la reserva
     public function eliminarProducto($idDetalle, $idCarrito) {
         $conexionBD = BD::crearInstancia();
+        
+        // Primero obtenemos la info del detalle para saber cuánto liberar
+        $sqlDet = $conexionBD->prepare("SELECT idLote, cantidad FROM detallecarrito WHERE idDetalle = ?");
+        $sqlDet->execute([$idDetalle]);
+        $det = $sqlDet->fetch();
+        
+        if ($det && $det['idLote']) {
+            // Liberamos la reserva en el lote
+            $sqlReserva = $conexionBD->prepare("UPDATE lote SET cantidad_reservada = GREATEST(0, cantidad_reservada - ?) WHERE idLote = ?");
+            $sqlReserva->execute([$det['cantidad'], $det['idLote']]);
+        }
+
         $sql = $conexionBD->prepare("DELETE FROM detallecarrito WHERE idDetalle = ?");
         $sql->execute(array($idDetalle));
         $this->actualizarTotales($idCarrito);

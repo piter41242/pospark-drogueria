@@ -3,69 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Droguería | Panel</title>
+    <title>Droguería | POS</title>
     
-    <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="../../Resources/bootstrap/css/bootstrap.min.css">
-    <!-- Iconos -->
-    <link rel="stylesheet" href="../../Resources/css/fonts.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../Resources/sweetalert/css/sweetalert2.css">
     <link rel="stylesheet" href="../../Resources/css/menu.css">
-    
-    <style>
-        
-    </style>
 </head>
 <body>
 
-    <!-- OVERLAY para cerrar el menú en móviles -->
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-    <!-- SIDEBAR (MENÚ LATERAL) -->
     <div class="sidebar" id="sidebar">
-        <div class="logo">
-            <!-- Icono de Farmacia -->
-            <i class="fas fa-prescription-bottle-alt" style="font-size: 2.5rem; color: #198754;"></i>
-            <h4>Droguería</h4>
-            <small class="text-muted"><?php echo $_SESSION['usuario']['nombreSede']; ?></small>
+        <div class="logo" style="padding: 20px 15px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <img src="../../Resources/img/empresa.jpg" alt="Logo Droguería" style="border-radius:50%; max-width: 160px; width: 100%; height: auto; margin-bottom: 10px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+            <div style="color: #94a3b8; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">
+                <?php echo $_SESSION['usuario']['nombreSede']; ?>
+            </div>
         </div>
         <ul>
-            <li><a href="?controlador=usuario&accion=inicio&dive=l2" class="<?php echo ($_GET['dive']=='l2')?'active':''; ?>"><span class="icon">🏠</span> Inicio</a></li>
-            <li><a href="?controlador=carrito&accion=inicio&dive=l3" class="<?php echo ($_GET['dive']=='l3')?'active':''; ?>"><span class="icon">🛒</span> POS (Ventas)</a></li>
-            <li><a href="?controlador=carrito&accion=abiertos&dive=l4" class="<?php echo ($_GET['dive']=='l4')?'active':''; ?>"><span class="icon">⏳</span> Carritos Abiertos</a></li>
-            <li><a href="?controlador=inventario&accion=inicio&dive=l5" class="<?php echo ($_GET['dive']=='l5')?'active':''; ?>"><span class="icon">📦</span> Inventario</a></li>
-            <li><a href="?controlador=usuario&accion=usuario&dive=l6" class="<?php echo ($_GET['dive']=='l6')?'active':''; ?>"><span class="icon">👥</span> Usuarios</a></li>
-            <li><a href="?controlador=cierre&accion=inicioVendedor&dive=l7" class="<?php echo ($_GET['dive']=='l7')?'active':''; ?>"><span class="icon">🔔</span> Cierre de Caja</a></li>
+            <li><a href="?controlador=usuario&accion=inicio&dive=l2" class="<?php echo (isset($_GET['dive']) && $_GET['dive']=='l2')?'active':''; ?>"><i class="bi bi-house-door-fill me-2"></i> Inicio</a></li>
             
-            <hr class="mx-3">
-            <li><a href="?controlador=usuario&accion=cerrarSesion" class="text-danger"><span class="icon" style="color:#dc3545;">🚪</span> Cerrar sesión</a></li>
+            <li><a href="?controlador=carrito&accion=inicio&dive=l3" class="<?php echo (isset($_GET['dive']) && $_GET['dive']=='l3')?'active':''; ?>"><i class="bi bi-cart3 me-2"></i> POS (Ventas)</a></li>
+            
+            <li><a href="?controlador=carrito&accion=abiertos&dive=l4" class="<?php echo (isset($_GET['dive']) && $_GET['dive']=='l4')?'active':''; ?>"><i class="bi bi-hourglass-split me-2"></i> Carritos Abiertos</a></li>
+            
+            <li><a href="?controlador=inventario&accion=inicio&dive=l5" class="<?php echo (isset($_GET['dive']) && $_GET['dive']=='l5')?'active':''; ?>"><i class="bi bi-box-seam me-2"></i> Consultar Inventario</a></li>
+            
+            <li><a href="?controlador=cierre&accion=inicioVendedor&dive=l6" class="<?php echo (isset($_GET['dive']) && $_GET['dive']=='l6')?'active':''; ?>"><i class="bi bi-cash-coin me-2"></i> Mi Cierre de Caja</a></li>
+            
+            <hr class="mx-3" style="border-color: rgba(255,255,255,0.1);">
+            
+            <li><a href="?controlador=usuario&accion=cerrarSesion" class="text-danger"><i class="bi bi-box-arrow-right me-2" style="color:#dc3545;"></i> Cerrar sesión</a></li>
         </ul>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div class="main-content">
-        <!-- TOPBAR -->
         <div class="topbar">
             <button class="btn-menu-toggle" onclick="toggleMenu()">☰</button>
             <div class="d-flex align-items-center">
-                <span class="me-3 fw-bold text-success"><?php echo $_SESSION['usuario']['nombre']; ?></span>
+                <span class="me-3 fw-bold" style="color: #cbd5e1;"><?php echo $_SESSION['usuario']['nombre']; ?></span>
                 <span class="badge bg-success"><?php echo $_SESSION['usuario']['nombreSede']; ?></span>
             </div>
         </div>
 
-        <!-- AQUÍ SE CARGA LA VISTA DINÁMICA -->
         <div id="idForm">
             <?php include_once("ruteador.php"); ?>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="../../Resources/sweetalert/js/sweetalert2.js"></script>
     <script src="../../Resources/js/jquery-latest.js"></script>
     <script src="../../Resources/bootstrap/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Función para abrir/cerrar el menú en móviles
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload(); 
+            }
+        });
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('show');
             document.getElementById('overlay').classList.toggle('show');
