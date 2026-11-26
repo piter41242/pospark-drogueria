@@ -12,7 +12,7 @@ if (isset($_GET['controlador']) && isset($_GET['accion'])) {
 }
 
 // Lista de acciones AJAX para el Vendedor (POS)
-if (in_array($accion, ['crear', 'editar', 'eliminar', 'obtener', 'buscarProductosAjax', 'agregarAlCarrito', 'quitarDelCarrito', 'cobrarVenta', 'abrirCarrito', 'cerrarCaja'])) {
+if (in_array($accion, ['crear', 'editar', 'eliminar', 'obtener', 'buscarProductosAjax', 'agregarAlCarrito', 'quitarDelCarrito', 'cobrarVenta', 'abrirCarrito', 'cerrarCaja', 'modificarCantidad', 'verDetalle'])) {
     include_once("../../Controlador/controlador_" . $controlador . ".php");
     $objControlador = "Controlador" . ucfirst($controlador);
     $controladorObj = new $objControlador();

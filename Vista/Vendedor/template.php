@@ -31,6 +31,8 @@
             <li><a href="?controlador=inventario&accion=inicio&dive=l5" class="<?php echo (isset($_GET['dive']) && $_GET['dive']=='l5')?'active':''; ?>"><i class="bi bi-box-seam me-2"></i> Consultar Inventario</a></li>
             
             <li><a href="?controlador=cierre&accion=inicioVendedor&dive=l6" class="<?php echo (isset($_GET['dive']) && $_GET['dive']=='l6')?'active':''; ?>"><i class="bi bi-cash-coin me-2"></i> Mi Cierre de Caja</a></li>
+
+            <li><a href="?controlador=venta&accion=inicio&dive=l7" class="<?php echo (isset($_GET['dive']) && $_GET['dive']=='l7')?'active':''; ?>"><i class="bi bi-receipt me-2"></i> Ventas del Día</a></li>
             
             <hr class="mx-3" style="border-color: rgba(255,255,255,0.1);">
             
